@@ -1,4 +1,4 @@
-./hi.py -> main 파일
+./app.py -> main 파일
 ./haisecret.py -> for GMail ID, PW
 ./handwrite_sample.png -> 유저가 글씨를 쓸 form
 ./email_address/uploaded_file.png -> 유저의 손글씨 담긴 사진
