@@ -14,7 +14,10 @@ from sheet2png import SHEETtoPNG
 from matplotlib import pyplot as plt
 
 def main():
-    st.title("TITLE")
+    st.title("Handwriting Font Generation")
+    st.header("손글씨 폰트 생성")
+    st.markdown("**HAI 2023 project 3팀**")
+    st.subheader("")
 
     # 이미지가 제공되는 웹 URL 또는 로컬 파일 시스템 경로
     image_url_or_path = "./handwrite_sample.png"
@@ -22,21 +25,25 @@ def main():
     # 이미지를 다운로드할 수 있는 링크 생성
     download_link = create_download_link_from_url_or_path(image_url_or_path)
 
-    # "손글씨 폼 다운로드" 문구 표시
-    st.header("손글씨 폼 다운로드")
-    
+    # "손글씨 작성 폼 다운로드" 문구 표시
+    st.subheader("손글씨 작성 폼 다운로드")
     download = st.button("다운로드")
     if download: st.markdown(download_link, unsafe_allow_html=True)
+    st.subheader("")
 
     # "손글씨 폼 다운로드" 문구 표시
-    st.header("손글씨 이미지를 등록")
+    st.subheader("손글씨 이미지 등록")
 
     # 사용자에게 이미지 파일을 업로드하도록 요청
     uploaded_file = st.file_uploader("이미지 파일을 업로드하세요.", type=["jpg", "jpeg", "png"])
     
     # 사용자에게 완성된 폰트를 전송 받을 이메일 주소를 입력하도록 요청
     email_address = st.text_input("폰트를 전송 받을 email 주소를 입력하세요.", value=None)
-    agree = st.checkbox("개인 정보 제공에 동의합니다.(이메일 입력 후에 체크를 해주세요! 안 그러면 코드가 꼬입니다.)")
+    agree = False
+    if not email_address:
+        st.warning("email 주소를 입력해주세요.")
+    else:
+        agree = st.checkbox("개인 정보 제공에 동의합니다.")
     
     if agree:
         save_path = ""
@@ -60,8 +67,6 @@ def main():
         if(ttf_file):
             send_mail(email_address, "나만의 손글씨 TTF 파일", "세상에 하나뿐인 나만의 손글씨 TTF 파일을 선물합니다!", ttf_file)
             st.success(f"손글씨 파일이 성공적으로 전송되었습니다.")
-
-
 
 def create_download_link_from_url_or_path(image_url_or_path):
     """
@@ -136,28 +141,31 @@ def get_image_file(folder_path):
     return image_files[0] if image_files else None
 
 #이메일 전송
-def send_mail(받는사람, 제목, 본문, 첨부파일=False):
+def send_mail(receiver, title, text, font=False):
     # 템플릿 생성
     msg = EmailMessage()
+
     # 보내는 사람 / 받는 사람 / 제목 입력
     msg["From"] = MY_ID
-    msg["To"] = 받는사람
-    msg["Subject"] = 제목
+    msg["To"] = receiver
+    msg["Subject"] = title
+
     # 본문 구성
-    msg.set_content(본문)
+    msg.set_content(text)
     
     # 파일 첨부
-    if 첨부파일:
-        파일명 = Path(첨부파일).name
-        with open(첨부파일, "rb") as f:
+    if font:
+        파일명 = Path(font).name
+        with open(font, "rb") as f:
             msg.add_attachment(f.read(), maintype="application", subtype="octet-stream", filename=파일명)
             msg.add_header('Content-Disposition', 'attachment', filename=파일명)
 
     with SMTP_SSL("smtp.gmail.com", 465) as smtp:
         smtp.login(MY_ID, MY_PW)
         smtp.send_message(msg)
+    
     # 완료 메시지
-    print(받는사람, "성공", sep="\t")
+    print(receiver, "성공", sep="\t")
 
 if __name__ == "__main__":
     main()
