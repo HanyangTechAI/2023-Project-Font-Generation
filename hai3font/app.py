@@ -133,7 +133,7 @@ def sheet_to_png(save_path, email_address): # save_path는 form 저장 위치
             else:
                 current_column = colums[(folder_num-33) % image_per_column]
                 with current_column:
-                    st.image(Image.open("./nullimage.png"), caption=f"Null Image", width=70)
+                    st.image(Image.open("./sample/nullimage.png"), caption=f"Null Image", width=70)
 
 # 전처리된 이미지 불러오기
 def get_image_file(folder_path):
