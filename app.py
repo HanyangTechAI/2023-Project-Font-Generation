@@ -12,6 +12,8 @@ from haisecret import MY_ID, MY_PW
 # 전처리
 from sheet2png import SHEETtoPNG
 from matplotlib import pyplot as plt
+# 후처리
+from post_processing import PostProcessing
 # load_model
 import tensorflow as tf
 from io import BytesIO
@@ -169,12 +171,18 @@ def main():
         # 이미지 전처리 진행
         # 또한 전처리된 이미지를 사이트에 표시
         sheet_to_png(save_path, email_address) # save_path는 form 저장 위치
-    
-        #####################################
-        # Git에서 모델 불러와서 png파일 생성  #
-        # 그 후 여러가지 후처리              #
-        #####################################
-        ttf_file = False
+
+        model.style_encoding(save_path) # save_path에서 이미지를 읽어와서 style encoder에 집어넣음
+        images = model.predict() # 이미지 생성, images에 생성된 이미지 저장
+        output_path = "./"+email_address+"/output"
+        
+        postProcess.save_images(images, output_path)
+
+        result_path = "./"+email_address+"/result"
+        os.makedirs(output_path, exist_ok=True)
+        postProcess = PostProcessing(output_path, result_path)
+        
+        # result_path의 img를 vecotrize, 이후 ttf 파일로 수정
         ttf_file = "test.png" # ttf 파일로 수정해야함
 
         # 사용자에게 완성된 폰트를 이메일로 전송
