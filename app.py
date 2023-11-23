@@ -21,7 +21,7 @@ from io import BytesIO
 @st.cache(show_spinner=False, allow_output_mutation=True, suppress_st_warning=True, max_entries=1)
 def load_model():
     with st.spinner("LOADING MODEL FOR IMAGE-TO-IMAGE TRANSLATION"):
-        model_url = "" # github url
+        model_url = "https://github.com/clovaai/mxfont/blob/main/generator.pth" # github url (예시로 mxfont 모델을 불러옴)
         response = requests.get(model_url, allow_redirects=True)
         model_content = BytesIO(response.content)
         model = tf.keras.models.load_model(model_content)
@@ -173,9 +173,9 @@ def main():
         sheet_to_png(save_path, email_address) # save_path는 form 저장 위치
 
         model.style_encoding(save_path) # save_path에서 이미지를 읽어와서 style encoder에 집어넣음
-        images = model.predict() # 이미지 생성, images에 생성된 이미지 저장
+        images = model.generate() # 이미지 생성, images에 생성된 이미지 저장
         output_path = "./"+email_address+"/output"
-        
+
         postProcess.save_images(images, output_path)
 
         result_path = "./"+email_address+"/result"
