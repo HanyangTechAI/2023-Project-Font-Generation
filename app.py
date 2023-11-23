@@ -18,7 +18,7 @@ from io import BytesIO
 
 @st.cache(show_spinner=False, allow_output_mutation=True, suppress_st_warning=True, max_entries=1)
 def load_model():
-    with st.spinner("LOADING MODEL FOR IMAGE-TO-IMAGE GENERATION"):
+    with st.spinner("LOADING MODEL FOR IMAGE-TO-IMAGE TRANSLATION"):
         model_url = "" # github url
         response = requests.get(model_url, allow_redirects=True)
         model_content = BytesIO(response.content)
